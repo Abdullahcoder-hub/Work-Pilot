@@ -190,7 +190,7 @@ const ACHIEVEMENTS_KEY = 'smart-todo-achievements-v1';
    instead of Local Storage. Local Storage is still used for
    per-device UI preferences (theme, settings, activity log, trash,
    achievements, backups) that were never part of the backend spec. */
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://work-pilot-api.onrender.com/api';
 const AUTH_TOKEN_KEY = 'smart-todo-auth-token';
 const AUTH_USER_KEY = 'smart-todo-auth-user';
 
