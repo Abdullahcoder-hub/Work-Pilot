@@ -86,12 +86,13 @@ Already listed in `backend/package.json`:
 
 ## 4. `.env` example
 
-Copy `backend/.env.example` to `backend/.env` and fill in real values:
+Copy `backend/.env.example` to `backend/.env` and fill in real values.
+Do not commit `backend/.env` to source control; it should contain private Atlas credentials.
 
 ```
 PORT=5000
 NODE_ENV=development
-MONGO_URI=mongodb://127.0.0.1:27017/smart-todo
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<dbname>?retryWrites=true&w=majority
 JWT_SECRET=replace_this_with_a_long_random_secret_string
 JWT_EXPIRES_IN=7d
 CLIENT_ORIGIN=http://127.0.0.1:5500

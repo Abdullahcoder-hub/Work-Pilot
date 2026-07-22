@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Smart To-Do — Professional task management dashboard" />
+  <title>Smart To-Do | Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===================== AUTH SCREEN ===================== -->
+  <div class="auth-overlay" id="auth-overlay">
+    <div class="auth-card">
+      <div class="auth-card__brand">
+        <div class="sidebar__logo" aria-hidden="true">✓</div>
+        <span class="auth-card__brand-title">Smart To-Do</span>
+      </div>
+      <p class="auth-card__subtitle">Sign in to sync your tasks across devices</p>
+
+      <div class="auth-tabs" role="tablist" aria-label="Authentication">
+        <button class="auth-tab auth-tab--active" id="auth-tab-login" type="button" role="tab" aria-selected="true">Log In</button>
+        <button class="auth-tab" id="auth-tab-register" type="button" role="tab" aria-selected="false">Register</button>
+      </div>
+
+      <p class="auth-error" id="auth-error" hidden></p>
+
+      <form class="auth-form" id="login-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email</label>
+          <input type="email" id="login-email" class="form-input" placeholder="you@example.com" required autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input type="password" id="login-password" class="form-input" placeholder="Enter your password" required autocomplete="current-password" />
+        </div>
+        <button type="submit" class="btn btn--primary btn--ripple auth-submit-btn" id="login-submit-btn">Log In</button>
+      </form>
+
+      <form class="auth-form" id="register-form" novalidate hidden>
+        <div class="form-group">
+          <label class="form-label" for="register-name">Name</label>
+          <input type="text" id="register-name" class="form-input" placeholder="Your name" required autocomplete="name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="register-email">Email</label>
+          <input type="email" id="register-email" class="form-input" placeholder="you@example.com" required autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="register-password">Password</label>
+          <input type="password" id="register-password" class="form-input" placeholder="At least 6 characters" required minlength="6" autocomplete="new-password" />
+        </div>
+        <button type="submit" class="btn btn--primary btn--ripple auth-submit-btn" id="register-submit-btn">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="app" id="app-root" hidden>
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="sidebar__brand">
+        <div class="sidebar__logo" aria-hidden="true">✓</div>
+        <span class="sidebar__title">Smart To-Do</span>
+      </div>
+
+      <nav class="sidebar__nav">
+        <ul class="nav-list">
+          <li>
+            <button class="nav-link nav-link--active" data-page="dashboard" type="button">
+              <span class="nav-link__icon" aria-hidden="true">🏠</span>
+              Dashboard
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-page="all-tasks" type="button">
+              <span class="nav-link__icon" aria-hidden="true">📋</span>
+              All Tasks
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-page="today" type="button">
+              <span class="nav-link__icon" aria-hidden="true">📅</span>
+              Today's Tasks
+              <span class="nav-badge" id="nav-badge-today" hidden>0</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-page="important" type="button">
+              <span class="nav-link__icon" aria-hidden="true">⭐</span>
+              Important
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-page="completed" type="button">
+              <span class="nav-link__icon" aria-hidden="true">✅</span>
+              Completed
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-page="activity" type="button">
+              <span class="nav-link__icon" aria-hidden="true">🕓</span>
+              Activity
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-page="settings" type="button">
+              <span class="nav-link__icon" aria-hidden="true">⚙️</span>
+              Settings
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar__footer">
+        <p class="sidebar__stats">
+          <span class="stat-label">Pending</span>
+          <span class="stat-value" id="sidebar-pending-count">0</span>
+        </p>
+      </div>
+    </aside>
+
+    <!-- ===================== MAIN WRAPPER ===================== -->
+    <div class="main-wrapper">
+
+      <!-- Top Navbar -->
+      <header class="navbar">
+        <div class="navbar__left">
+          <h1 class="navbar__greeting" id="greeting">Good morning!</h1>
+          <p class="navbar__date" id="current-date"></p>
+        </div>
+
+        <div class="navbar__right">
+          <div class="search-wrap">
+            <div class="search-box">
+              <span class="search-box__icon" aria-hidden="true">🔍</span>
+              <input
+                type="search"
+                id="search-input"
+                class="search-box__input"
+                placeholder="Search tasks..."
+                aria-label="Search tasks by title or description"
+              />
+            </div>
+            <p class="search-results-counter" id="search-results-counter" aria-live="polite"></p>
+          </div>
+          <button class="theme-toggle-btn" type="button" id="focus-mode-btn" aria-label="Enter focus mode" title="Focus Mode">
+            <span aria-hidden="true">🎯</span>
+          </button>
+          <button class="theme-toggle-btn" type="button" id="theme-toggle-btn" aria-label="Toggle dark mode">
+            <span class="theme-toggle-btn__icon" id="theme-toggle-icon" aria-hidden="true">🌙</span>
+          </button>
+          <button class="avatar-btn" type="button" id="avatar-logout-btn" aria-label="User profile — click to log out" title="Click to log out">
+            <span class="avatar-btn__initials" id="avatar-initials">ST</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- ===================== MAIN CONTENT ===================== -->
+      <main class="main-content">
+
+        <!-- ===== DASHBOARD PAGE ===== -->
+        <section class="page page--active" id="page-dashboard" data-page="dashboard">
+          <div class="page-header">
+            <h2 class="page-header__title">Dashboard</h2>
+            <p class="page-header__subtitle">Your productivity at a glance</p>
+          </div>
+
+          <!-- Statistics Cards -->
+          <div class="stats-grid">
+            <article class="stat-card stat-card--total">
+              <div class="stat-card__icon" aria-hidden="true">📊</div>
+              <div class="stat-card__body">
+                <p class="stat-card__label">Total Tasks</p>
+                <p class="stat-card__value" id="stat-total">0</p>
+              </div>
+            </article>
+            <article class="stat-card stat-card--pending">
+              <div class="stat-card__icon" aria-hidden="true">⏳</div>
+              <div class="stat-card__body">
+                <p class="stat-card__label">Pending</p>
+                <p class="stat-card__value" id="stat-pending">0</p>
+              </div>
+            </article>
+            <article class="stat-card stat-card--completed">
+              <div class="stat-card__icon" aria-hidden="true">✅</div>
+              <div class="stat-card__body">
+                <p class="stat-card__label">Completed</p>
+                <p class="stat-card__value" id="stat-completed">0</p>
+              </div>
+            </article>
+            <article class="stat-card stat-card--today">
+              <div class="stat-card__icon" aria-hidden="true">📅</div>
+              <div class="stat-card__body">
+                <p class="stat-card__label">Today's Tasks</p>
+                <p class="stat-card__value" id="stat-today">0</p>
+              </div>
+            </article>
+            <article class="stat-card stat-card--overdue">
+              <div class="stat-card__icon" aria-hidden="true">⚠️</div>
+              <div class="stat-card__body">
+                <p class="stat-card__label">Overdue</p>
+                <p class="stat-card__value" id="stat-overdue">0</p>
+              </div>
+            </article>
+            <article class="stat-card stat-card--score">
+              <div class="stat-card__icon" aria-hidden="true">🚀</div>
+              <div class="stat-card__body">
+                <p class="stat-card__label">Productivity Score</p>
+                <p class="stat-card__value" id="stat-score">0</p>
+              </div>
+            </article>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="progress-card">
+            <div class="progress-card__header">
+              <h3 class="progress-card__title">Overall Progress</h3>
+              <span class="progress-card__percent" id="progress-percent">0%</span>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar">
+              <div class="progress-bar__fill" id="progress-bar-fill"></div>
+            </div>
+          </div>
+
+          <!-- Productivity Stats -->
+          <div class="productivity-grid">
+            <div class="productivity-card">
+              <p class="productivity-card__label">Daily</p>
+              <p class="productivity-card__value"><span id="stat-daily">0</span></p>
+            </div>
+            <div class="productivity-card">
+              <p class="productivity-card__label">Weekly</p>
+              <p class="productivity-card__value"><span id="stat-weekly">0</span></p>
+            </div>
+            <div class="productivity-card">
+              <p class="productivity-card__label">Monthly</p>
+              <p class="productivity-card__value"><span id="stat-monthly">0</span></p>
+            </div>
+            <div class="productivity-card">
+              <p class="productivity-card__label">Current Streak</p>
+              <p class="productivity-card__value"><span id="stat-streak">0</span> <span class="productivity-card__unit">days</span></p>
+            </div>
+            <div class="productivity-card">
+              <p class="productivity-card__label">Longest Streak</p>
+              <p class="productivity-card__value"><span id="stat-longest-streak">0</span> <span class="productivity-card__unit">days</span></p>
+            </div>
+            <div class="productivity-card">
+              <p class="productivity-card__label">Weekly Progress</p>
+              <p class="productivity-card__value"><span id="stat-weekly-progress">0</span><span class="productivity-card__unit">%</span></p>
+            </div>
+            <div class="productivity-card">
+              <p class="productivity-card__label">Monthly Progress</p>
+              <p class="productivity-card__value"><span id="stat-monthly-progress">0</span><span class="productivity-card__unit">%</span></p>
+            </div>
+          </div>
+
+          <!-- Achievements -->
+          <div class="achievements-section">
+            <h3 class="achievements-section__title">Achievements</h3>
+            <div class="achievements-grid" id="achievements-grid"></div>
+          </div>
+
+          <!-- Mini Calendar -->
+          <div class="calendar-card">
+            <div class="calendar-card__header">
+              <button class="calendar-nav-btn" type="button" id="calendar-prev-btn" aria-label="Previous month">‹</button>
+              <h3 class="calendar-card__title" id="calendar-month-label">Month Year</h3>
+              <button class="calendar-nav-btn" type="button" id="calendar-next-btn" aria-label="Next month">›</button>
+            </div>
+            <div class="calendar__weekdays" aria-hidden="true">
+              <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+            </div>
+            <div class="calendar__grid" id="calendar-grid" role="grid" aria-label="Task due-date calendar"></div>
+          </div>
+
+          <!-- Recent tasks preview on dashboard -->
+          <div class="dashboard-recent">
+            <div class="toolbar">
+              <div class="toolbar__info">
+                <h3 class="toolbar__heading">Recent Tasks</h3>
+                <p class="toolbar__meta" id="dashboard-recent-meta">Your latest tasks</p>
+              </div>
+              <button class="btn btn--primary btn--ripple" type="button" id="add-task-btn-dashboard">
+                <span class="btn__icon" aria-hidden="true">+</span>
+                Add Task
+              </button>
+            </div>
+            <div class="task-section">
+              <ul class="task-list" id="dashboard-task-list"></ul>
+              <div class="empty-state" id="dashboard-empty-state" hidden>
+                <div class="empty-state__icon" aria-hidden="true">📝</div>
+                <h3 class="empty-state__title">No tasks yet</h3>
+                <p class="empty-state__text">Create your first task to get started.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== TASKS PAGE (All / Today / Important / Completed) ===== -->
+        <section class="page" id="page-tasks" data-page="tasks">
+          <div class="toolbar">
+            <div class="toolbar__info">
+              <h2 class="toolbar__heading" id="tasks-page-title">All Tasks</h2>
+              <p class="toolbar__meta" id="task-count-meta">You have 0 tasks to complete</p>
+              <button class="date-filter-chip" id="date-filter-chip" type="button" hidden>
+                📅 <span id="date-filter-chip-text"></span> · Clear ✕
+              </button>
+            </div>
+            <button class="btn btn--primary btn--ripple" type="button" id="add-task-btn">
+              <span class="btn__icon" aria-hidden="true">+</span>
+              Add Task
+            </button>
+          </div>
+
+          <div class="task-section">
+            <!-- Filter tabs + Sort -->
+            <div class="task-section__controls">
+              <div class="task-filters" role="tablist" aria-label="Filter tasks">
+                <button class="filter-tab filter-tab--active" role="tab" aria-selected="true" data-filter="all" type="button">All</button>
+                <button class="filter-tab" role="tab" aria-selected="false" data-filter="active" type="button">Active</button>
+                <button class="filter-tab" role="tab" aria-selected="false" data-filter="completed" type="button">Completed</button>
+                <button class="filter-tab" role="tab" aria-selected="false" data-filter="high" type="button">High Priority</button>
+                <button class="filter-tab" role="tab" aria-selected="false" data-filter="today" type="button">Today's Tasks</button>
+              </div>
+
+              <div class="sort-control">
+                <label class="sort-control__label" for="sort-select">Sort by</label>
+                <select id="sort-select" class="sort-control__select" aria-label="Sort tasks">
+                  <option value="newest">Newest</option>
+                  <option value="oldest">Oldest</option>
+                  <option value="priority">Priority</option>
+                  <option value="dueDate">Due Date</option>
+                </select>
+              </div>
+            </div>
+
+            <ul class="task-list" id="task-list"></ul>
+
+            <div class="empty-state" id="empty-state" hidden>
+              <div class="empty-state__icon" aria-hidden="true">📝</div>
+              <h3 class="empty-state__title">No tasks yet</h3>
+              <p class="empty-state__text">Click "Add Task" to create your first task.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== ACTIVITY TIMELINE PAGE ===== -->
+        <section class="page" id="page-activity" data-page="activity">
+          <div class="page-header">
+            <h2 class="page-header__title">Activity Timeline</h2>
+            <p class="page-header__subtitle">A complete history of everything that happened</p>
+          </div>
+
+          <ul class="activity-timeline" id="activity-timeline"></ul>
+          <div class="empty-state" id="activity-empty-state" hidden>
+            <div class="empty-state__icon" aria-hidden="true">🕓</div>
+            <h3 class="empty-state__title">No activity yet</h3>
+            <p class="empty-state__text">Actions you take on tasks will show up here.</p>
+          </div>
+
+          <div class="page-header activity-trash-header">
+            <h2 class="page-header__title">Trash</h2>
+            <p class="page-header__subtitle">Restore recently deleted tasks</p>
+          </div>
+
+          <ul class="task-list" id="trash-list"></ul>
+          <div class="empty-state" id="trash-empty-state" hidden>
+            <div class="empty-state__icon" aria-hidden="true">🗑️</div>
+            <h3 class="empty-state__title">Trash is empty</h3>
+            <p class="empty-state__text">Deleted tasks appear here and can be restored.</p>
+          </div>
+        </section>
+
+        <!-- ===== SETTINGS PAGE ===== -->
+        <section class="page" id="page-settings" data-page="settings">
+          <div class="page-header">
+            <h2 class="page-header__title">Settings</h2>
+            <p class="page-header__subtitle">Manage your app preferences</p>
+          </div>
+
+          <div class="settings-panel">
+            <div class="settings-card">
+              <h3 class="settings-card__title">Data Management</h3>
+              <p class="settings-card__text">Clear all tasks permanently from your account.</p>
+              <button class="btn btn--danger btn--ripple" type="button" id="clear-all-btn">
+                Clear All Tasks
+              </button>
+            </div>
+
+            <div class="settings-card">
+              <h3 class="settings-card__title">Export &amp; Import</h3>
+              <p class="settings-card__text">Download all tasks as a JSON file, or restore tasks from a previously exported file.</p>
+              <div class="settings-card__actions">
+                <button class="btn btn--secondary btn--ripple" type="button" id="export-btn">Export JSON</button>
+                <button class="btn btn--secondary btn--ripple" type="button" id="import-btn">Import JSON</button>
+                <input type="file" id="import-file-input" accept="application/json" hidden />
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <h3 class="settings-card__title">Backup</h3>
+              <p class="settings-card__text" id="backup-status-text">No backup yet.</p>
+              <button class="btn btn--secondary btn--ripple" type="button" id="restore-backup-btn">Restore Last Backup</button>
+            </div>
+
+            <div class="settings-card">
+              <h3 class="settings-card__title">Task Defaults</h3>
+              <p class="settings-card__text">Applied automatically whenever you add a new task.</p>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="setting-default-priority">Default Priority</label>
+                  <select id="setting-default-priority" class="form-input form-select">
+                    <option value="High">High</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="Low">Low</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="setting-default-category">Default Category</label>
+                  <select id="setting-default-category" class="form-input form-select">
+                    <option value="Study">Study</option>
+                    <option value="Work" selected>Work</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Fitness">Fitness</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <h3 class="settings-card__title">Notifications &amp; Animation</h3>
+              <label class="settings-toggle">
+                <input type="checkbox" id="setting-notifications-toggle" checked />
+                <span>Enable notification badges (Today's Tasks, overdue reminders)</span>
+              </label>
+              <label class="settings-toggle">
+                <input type="checkbox" id="setting-animations-toggle" checked />
+                <span>Enable interface animations</span>
+              </label>
+            </div>
+
+            <div class="settings-card">
+              <h3 class="settings-card__title">Keyboard Shortcuts</h3>
+              <ul class="shortcuts-list">
+                <li><span><kbd>Ctrl</kbd> + <kbd>N</kbd></span><span>Open Add Task</span></li>
+                <li><span><kbd>Ctrl</kbd> + <kbd>F</kbd></span><span>Focus Search</span></li>
+                <li><span><kbd>Esc</kbd></span><span>Close Modal / Exit Focus Mode</span></li>
+                <li><span><kbd>Delete</kbd></span><span>Delete Selected Task</span></li>
+              </ul>
+            </div>
+
+            <div class="settings-card">
+              <h3 class="settings-card__title">About</h3>
+              <p class="settings-card__text">Smart To-Do v1.0 — Built with HTML, CSS &amp; Vanilla JavaScript.</p>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ===================== ADD / EDIT TASK MODAL ===================== -->
+  <div class="modal-overlay" id="modal-overlay" hidden aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <header class="modal__header">
+        <h2 class="modal__title" id="modal-title">Add New Task</h2>
+        <button class="modal__close-btn" type="button" id="modal-close-btn" aria-label="Close modal">&times;</button>
+      </header>
+
+      <form class="modal__form" id="task-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="task-title">
+            Task Title <span class="form-label__required">*</span>
+          </label>
+          <input type="text" id="task-title" class="form-input" placeholder="Enter task title" required />
+          <p class="form-error" id="title-error" hidden>Task title is required.</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="task-description">Description</label>
+          <textarea id="task-description" class="form-input form-textarea" placeholder="Add a description (optional)" rows="3"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="task-category">Category</label>
+            <select id="task-category" class="form-input form-select">
+              <option value="Study">Study</option>
+              <option value="Work" selected>Work</option>
+              <option value="Personal">Personal</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Fitness">Fitness</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="task-due-date">Due Date</label>
+            <input type="date" id="task-due-date" class="form-input" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <span class="form-label">Priority</span>
+          <div class="priority-options" role="radiogroup" aria-label="Task priority">
+            <label class="priority-option">
+              <input type="radio" name="priority" value="High" />
+              <span class="priority-option__label priority-option__label--high">High</span>
+            </label>
+            <label class="priority-option">
+              <input type="radio" name="priority" value="Medium" checked />
+              <span class="priority-option__label priority-option__label--medium">Medium</span>
+            </label>
+            <label class="priority-option">
+              <input type="radio" name="priority" value="Low" />
+              <span class="priority-option__label priority-option__label--low">Low</span>
+            </label>
+          </div>
+        </div>
+
+        <footer class="modal__footer">
+          <button type="button" class="btn btn--secondary btn--ripple" id="modal-cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn--primary btn--ripple" id="modal-save-btn">Save Task</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================== FOCUS MODE ===================== -->
+  <div class="focus-overlay" id="focus-overlay" hidden aria-hidden="true">
+    <div class="focus-card">
+      <p class="focus-card__eyebrow">Focus Mode</p>
+      <h2 class="focus-card__title" id="focus-task-title">All caught up!</h2>
+      <p class="focus-card__desc" id="focus-task-desc"></p>
+      <div class="focus-card__badges" id="focus-task-badges"></div>
+      <div class="focus-card__actions" id="focus-task-actions">
+        <button class="btn btn--primary btn--ripple" type="button" id="focus-complete-btn">Mark Complete</button>
+        <button class="btn btn--secondary btn--ripple" type="button" id="focus-skip-btn">Skip</button>
+      </div>
+      <button class="focus-exit-btn" type="button" id="focus-exit-btn">✕ Exit Focus Mode</button>
+    </div>
+  </div>
+
+  <!-- ===================== QUICK ACTIONS (FAB) ===================== -->
+  <div class="fab-container" id="fab-container">
+    <div class="fab-menu" id="fab-menu" hidden>
+      <button class="fab-menu__item" type="button" id="fab-quick-add">➕ <span>Quick Add Task</span></button>
+      <button class="fab-menu__item" type="button" id="fab-quick-search">🔍 <span>Quick Search</span></button>
+      <button class="fab-menu__item" type="button" id="fab-quick-today">📅 <span>Today's Tasks</span></button>
+    </div>
+    <button class="fab-btn" type="button" id="fab-toggle-btn" aria-haspopup="true" aria-expanded="false" aria-label="Quick actions">
+      <span id="fab-toggle-icon" aria-hidden="true">+</span>
+    </button>
+  </div>
+
+  <!-- ===================== TOAST NOTIFICATIONS ===================== -->
+  <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
