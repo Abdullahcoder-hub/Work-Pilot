@@ -55,7 +55,7 @@ export const env: EnvConfig = {
   mongoUri: validateMongoUri(required('MONGO_URI', mongoUri)),
   jwtSecret: required('JWT_SECRET', 'change-me-in-production-please-123'),
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
-  clientOrigin: (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
+  clientOrigin: (process.env.CLIENT_ORIGIN || 'http://localhost:5173,https://work-pilot-frontend.vercel.app')
     .split(',')
     .map((origin) => origin.trim()),
   superAdminEmail: process.env.SUPER_ADMIN_EMAIL,
