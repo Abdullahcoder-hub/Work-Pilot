@@ -1,4 +1,11 @@
 {
+  "name": "workpilot-root",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd backend && npm run build",
+    "start": "cd backend && npm start"
+  },
   "dependencies": {
     "mongodb": "^7.5.0"
   }
