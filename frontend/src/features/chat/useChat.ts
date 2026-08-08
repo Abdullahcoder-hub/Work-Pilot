@@ -89,7 +89,6 @@ export function useChatMessages(channelId: string) {
         channelId,
         senderId: { _id: user._id, name: user.name, email: user.email },
         text,
-        attachment: null,
         createdAt: new Date().toISOString(),
       };
       queryClient.setQueryData<ChatMessage[] | undefined>(key(channelId), (prev) => [...(prev ?? []), tempMessage]);

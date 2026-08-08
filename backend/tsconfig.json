@@ -1,32 +1,27 @@
 {
   "compilerOptions": {
     "target": "ES2021",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "commonjs",
     "lib": ["ES2021"],
-
-    "rootDir": "src",
     "outDir": "dist",
-
+    "rootDir": "src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-
     "resolveJsonModule": true,
+    "moduleResolution": "node",
     "declaration": false,
     "sourceMap": true,
-
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["*"]
     }
   },
-
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "_legacy_js"]
 }

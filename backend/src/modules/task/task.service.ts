@@ -1,4 +1,4 @@
-import { FilterQuery, Types, HydratedDocument } from 'mongoose';
+import { FilterQuery, Types } from 'mongoose';
 import { Task, ITask, TaskStatus } from './task.model';
 import { User, Role } from '../user/user.model';
 import { Project } from '../project/project.model';
@@ -139,7 +139,7 @@ export async function listTasks(actor: Actor, filters: ListTasksInput) {
   };
 }
 
-async function findVisibleTask(actor: Actor, taskId: string): Promise<HydratedDocument<ITask>> {
+async function findVisibleTask(actor: Actor, taskId: string): Promise<ITask> {
   const task = await Task.findOne({ _id: taskId, companyId: actor.companyId });
   if (!task) throw ApiError.notFound('Task not found');
 
@@ -417,7 +417,7 @@ export async function moveTask(actor: Actor, taskId: string, input: MoveTaskInpu
   const wasCompleted = task.completed;
   const prevAssigneeId = task.assigneeId ? task.assigneeId.toString() : null;
 
-  const columnTasks = await Task.find({ projectId, status: toStatus, _id: { $ne: task._id } }).sort({ order: 1 });
+  const columnTasks = (await Task.find({ projectId, status: toStatus, _id: { $ne: task._id } }).sort({ order: 1 })) as ITask[];
 
   const clampedIndex = Math.max(0, Math.min(input.index, columnTasks.length));
   columnTasks.splice(clampedIndex, 0, task);

@@ -1,4 +1,4 @@
-import { Schema, model, Document, Types } from 'mongoose';
+import { Schema, model, Document, Types, SchemaDefinitionProperty } from 'mongoose';
 
 export const LEAVE_TYPES = ['annual', 'sick', 'casual', 'unpaid', 'other'] as const;
 export type LeaveType = (typeof LEAVE_TYPES)[number];
@@ -23,13 +23,19 @@ export interface ILeaveRequest extends Document {
   updatedAt: Date;
 }
 
+const dateField: SchemaDefinitionProperty<string> = {
+  type: String,
+  required: true,
+  match: [/^\d{4}-\d{2}-\d{2}$/, 'must be in YYYY-MM-DD format'],
+};
+
 const leaveRequestSchema = new Schema<ILeaveRequest>(
   {
     companyId: { type: Schema.Types.ObjectId, ref: 'Company', required: true, index: true },
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     leaveType: { type: String, enum: LEAVE_TYPES, required: true },
-    startDate: { type: String, required: true, match: [/^\d{4}-\d{2}-\d{2}$/, 'must be in YYYY-MM-DD format'] },
-    endDate: { type: String, required: true, match: [/^\d{4}-\d{2}-\d{2}$/, 'must be in YYYY-MM-DD format'] },
+    startDate: dateField,
+    endDate: dateField,
     reason: { type: String, trim: true, default: '', maxlength: 500 },
     status: { type: String, enum: LEAVE_STATUSES, default: 'pending', index: true },
     reviewedBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },

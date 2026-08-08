@@ -17,11 +17,11 @@ interface EnvConfig {
   emailFrom: string;
   emailFromName: string;
   appUrl: string;
-  aiProvider: 'anthropic' | 'gemini';
   anthropicApiKey: string | undefined;
   anthropicModel: string | undefined;
   geminiApiKey: string | undefined;
   geminiModel: string | undefined;
+  aiProvider: 'anthropic' | 'gemini' | undefined;
 }
 
 function required(name: string): string {
@@ -65,11 +65,11 @@ export const env: EnvConfig = {
   emailFromName: process.env.EMAIL_FROM_NAME || 'WorkPilot',
   // Frontend origin used to build links inside emails (verify/reset/accept-invite).
   appUrl: process.env.APP_URL || 'http://localhost:5173',
-  aiProvider: process.env.AI_PROVIDER === 'gemini' ? 'gemini' : 'anthropic',
   anthropicApiKey: process.env.ANTHROPIC_API_KEY,
   anthropicModel: process.env.ANTHROPIC_MODEL,
   geminiApiKey: process.env.GEMINI_API_KEY,
   geminiModel: process.env.GEMINI_MODEL,
+  aiProvider: (process.env.AI_PROVIDER as EnvConfig['aiProvider']) || undefined,
 };
 
 if (env.jwtSecret.length < 16) {
