@@ -140,7 +140,7 @@ export async function createGeminiMessage(
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
         response = await getClient().models.generateContent({
-          model: env.geminiModel,
+          model: env.geminiModel ?? 'gemini-1.0',
           contents,
           config,
         });
@@ -176,7 +176,7 @@ export async function createGeminiMessage(
     }
 
     if (/RESOURCE_EXHAUSTED|quota exceeded|429/i.test(message)) {
-      throw ApiError.tooManyRequests(
+      throw ApiError.internal(
         "AI quota exceeded. Please try again later."
       );
     }

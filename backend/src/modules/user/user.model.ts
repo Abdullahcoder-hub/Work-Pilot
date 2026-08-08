@@ -124,11 +124,16 @@ userSchema.methods.comparePassword = async function comparePassword(
 
 userSchema.set('toJSON', {
   transform: (_doc, ret) => {
-    delete ret.password;
-    delete ret.emailVerificationToken;
-    delete ret.emailVerificationExpires;
-    delete ret.passwordResetToken;
-    delete ret.passwordResetExpires;
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete (ret as unknown as Record<string, unknown>).password;
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete (ret as unknown as Record<string, unknown>).emailVerificationToken;
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete (ret as unknown as Record<string, unknown>).emailVerificationExpires;
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete (ret as unknown as Record<string, unknown>).passwordResetToken;
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete (ret as unknown as Record<string, unknown>).passwordResetExpires;
     return ret;
   },
 });

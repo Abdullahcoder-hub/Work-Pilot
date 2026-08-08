@@ -1,4 +1,4 @@
-import { FilterQuery, Types } from 'mongoose';
+import { FilterQuery, Types, HydratedDocument } from 'mongoose';
 import { Task, ITask, TaskStatus } from './task.model';
 import { User, Role } from '../user/user.model';
 import { Project } from '../project/project.model';
@@ -139,7 +139,7 @@ export async function listTasks(actor: Actor, filters: ListTasksInput) {
   };
 }
 
-async function findVisibleTask(actor: Actor, taskId: string): Promise<ITask> {
+async function findVisibleTask(actor: Actor, taskId: string): Promise<HydratedDocument<ITask>> {
   const task = await Task.findOne({ _id: taskId, companyId: actor.companyId });
   if (!task) throw ApiError.notFound('Task not found');
 

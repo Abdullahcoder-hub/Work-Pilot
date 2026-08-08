@@ -65,3 +65,5 @@ _legacy_frontend/
 .DS_Store
 Thumbs.db
 .vscode/
+# Local MongoDB database files
+data/
