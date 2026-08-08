@@ -47,11 +47,12 @@ function validateMongoUri(uri: string): string {
 }
 
 const nodeEnv = (process.env.NODE_ENV as EnvConfig['nodeEnv']) || 'development';
+const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || process.env.MONGODB_URL || process.env.DATABASE_URL || 'mongodb://127.0.0.1:27017/workpilot-dev';
 
 export const env: EnvConfig = {
   nodeEnv,
   port: Number(process.env.PORT) || 5000,
-  mongoUri: validateMongoUri(required('MONGO_URI', 'mongodb://127.0.0.1:27017/workpilot-dev')),
+  mongoUri: validateMongoUri(required('MONGO_URI', mongoUri)),
   jwtSecret: required('JWT_SECRET', 'change-me-in-production-please-123'),
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   clientOrigin: (process.env.CLIENT_ORIGIN || 'http://localhost:5173')

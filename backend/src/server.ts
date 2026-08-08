@@ -36,5 +36,5 @@ async function main(): Promise<void> {
 
 main().catch((err) => {
   logger.error('Fatal startup error', { err: err instanceof Error ? err.message : err });
-  process.exit(1);
+  logger.warn('Continuing startup despite initialization error');
 });
