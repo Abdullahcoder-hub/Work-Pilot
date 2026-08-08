@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WorkPilot</title>
+    <script>
+      (function () {
+        try {
+          var VALID_THEMES = ['indigo', 'teal', 'rose', 'amber', 'emerald', 'slate', 'midnight', 'forest'];
+          var theme = localStorage.getItem('workpilot-theme');
+          var mode = localStorage.getItem('workpilot-theme-mode');
+          var root = document.documentElement;
+          root.classList.add('theme-' + (VALID_THEMES.indexOf(theme) !== -1 ? theme : 'indigo'));
+          if (mode === 'dark') root.classList.add('dark');
+        } catch (e) {
+          // localStorage unavailable (privacy mode, etc) — fall back to default theme.
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-surface-subtle text-slate-900 antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

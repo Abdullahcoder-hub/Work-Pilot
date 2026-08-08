@@ -1,0 +1,266 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --canvas-default: 11 12 15;
+  --canvas-subtle: 17 19 24;
+  --canvas-raised: 23 26 33;
+
+  --surface-default: 255 255 255;
+  --surface-subtle: 247 247 248;
+  --surface-raised: 255 255 255;
+
+  --border-default: 229 229 232;
+  --border-dark: 35 38 46;
+
+  --text-default: 15 23 42;
+  --text-muted: 100 116 139;
+
+  --brand-50: 238 241 255;
+  --brand-100: 223 227 255;
+  --brand-200: 194 201 255;
+  --brand-300: 155 163 255;
+  --brand-400: 124 108 255;
+  --brand-500: 96 71 255;
+  --brand-600: 79 52 236;
+  --brand-700: 65 40 196;
+  --brand-800: 53 35 156;
+  --brand-900: 44 32 128;
+}
+
+.theme-indigo {
+  --brand-50: 238 241 255;
+  --brand-100: 223 227 255;
+  --brand-200: 194 201 255;
+  --brand-300: 155 163 255;
+  --brand-400: 124 108 255;
+  --brand-500: 96 71 255;
+  --brand-600: 79 52 236;
+  --brand-700: 65 40 196;
+  --brand-800: 53 35 156;
+  --brand-900: 44 32 128;
+
+  --surface-subtle: 247 247 248;
+  --surface-raised: 255 255 255;
+}
+
+.theme-teal {
+  --brand-50: 229 246 242;
+  --brand-100: 207 250 246;
+  --brand-200: 167 243 208;
+  --brand-300: 94 234 212;
+  --brand-400: 45 212 191;
+  --brand-500: 20 184 166;
+  --brand-600: 13 148 136;
+  --brand-700: 15 118 110;
+  --brand-800: 21 94 117;
+  --brand-900: 22 78 74;
+
+  --surface-subtle: 229 251 249;
+  --surface-raised: 255 255 255;
+}
+
+.theme-rose {
+  --brand-50: 255 240 245;
+  --brand-100: 254 215 226;
+  --brand-200: 251 176 199;
+  --brand-300: 244 114 182;
+  --brand-400: 236 72 153;
+  --brand-500: 236 72 153;
+  --brand-600: 219 39 119;
+  --brand-700: 190 24 93;
+  --brand-800: 157 23 77;
+  --brand-900: 131 24 67;
+
+  --surface-subtle: 255 241 245;
+  --surface-raised: 255 255 255;
+}
+
+.theme-amber {
+  --brand-50: 255 249 230;
+  --brand-100: 255 243 199;
+  --brand-200: 254 215 170;
+  --brand-300: 253 186 116;
+  --brand-400: 251 146 60;
+  --brand-500: 245 158 11;
+  --brand-600: 217 119 6;
+  --brand-700: 180 83 9;
+  --brand-800: 146 64 14;
+  --brand-900: 120 53 15;
+
+  --surface-subtle: 255 250 240;
+  --surface-raised: 255 255 255;
+}
+
+.theme-emerald {
+  --brand-50: 236 253 245;
+  --brand-100: 209 250 229;
+  --brand-200: 167 243 208;
+  --brand-300: 110 231 183;
+  --brand-400: 52 211 153;
+  --brand-500: 16 185 129;
+  --brand-600: 5 150 105;
+  --brand-700: 4 120 87;
+  --brand-800: 6 95 70;
+  --brand-900: 6 78 59;
+
+  --surface-subtle: 240 253 244;
+  --surface-raised: 255 255 255;
+}
+
+.theme-slate {
+  --brand-50: 248 250 252;
+  --brand-100: 226 232 240;
+  --brand-200: 203 213 225;
+  --brand-300: 148 163 184;
+  --brand-400: 100 116 139;
+  --brand-500: 71 85 105;
+  --brand-600: 51 65 85;
+  --brand-700: 30 41 59;
+  --brand-800: 15 23 42;
+  --brand-900: 15 23 42;
+
+  --surface-subtle: 247 250 255;
+  --surface-raised: 255 255 255;
+}
+
+.theme-midnight {
+  --brand-50: 43 51 86;
+  --brand-100: 57 70 123;
+  --brand-200: 73 89 158;
+  --brand-300: 99 123 194;
+  --brand-400: 131 160 225;
+  --brand-500: 147 180 255;
+  --brand-600: 124 154 225;
+  --brand-700: 99 129 200;
+  --brand-800: 74 104 175;
+  --brand-900: 53 78 144;
+}
+
+.theme-forest {
+  --brand-50: 19 78 42;
+  --brand-100: 22 107 60;
+  --brand-200: 34 145 86;
+  --brand-300: 52 185 109;
+  --brand-400: 74 222 143;
+  --brand-500: 102 255 175;
+  --brand-600: 82 216 148;
+  --brand-700: 63 173 119;
+  --brand-800: 44 130 91;
+  --brand-900: 27 79 58;
+}
+
+/*
+ * Dark mode. Applied via the `dark` class on <html> (Tailwind's
+ * `darkMode: 'class'`), independently of which `.theme-*` (brand hue) is
+ * active — so all 8 color themes work in both light and dark mode. This
+ * block is intentionally last among the class-based overrides so it wins
+ * the cascade for the structural (surface/text/border) variables when an
+ * element has both `dark` and a `theme-*` class; the theme's `--brand-*`
+ * variables are untouched here and keep showing through.
+ */
+.dark {
+  --canvas-default: 8 9 12;
+  --canvas-subtle: 13 15 20;
+  --canvas-raised: 19 22 28;
+
+  --surface-default: 23 26 33;
+  --surface-subtle: 17 19 24;
+  --surface-raised: 30 33 41;
+
+  --border-default: 51 55 64;
+  --border-dark: 71 76 87;
+
+  --text-default: 226 232 240;
+  --text-muted: 148 163 184;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    color: rgb(var(--text-default));
+    background-color: rgb(var(--surface-subtle));
+  }
+  ::selection {
+    background-color: rgb(var(--brand-200));
+    color: rgb(var(--brand-900));
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border border-border shadow-panel;
+    background-color: rgb(var(--surface-default));
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-brand-500 text-white hover:bg-brand-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500;
+  }
+  .btn-secondary {
+    @apply btn border border-border hover:bg-surface-subtle;
+    color: rgb(var(--text-default));
+    background-color: rgb(var(--surface-default));
+  }
+  .btn-ghost {
+    @apply btn hover:bg-surface-subtle;
+    color: rgb(var(--text-default));
+  }
+  .btn-danger {
+    @apply btn bg-rose-600 text-white hover:bg-rose-700;
+  }
+  .input {
+    @apply w-full rounded-lg border px-3 py-2 text-sm focus:outline-none;
+    color: rgb(var(--text-default));
+    background-color: rgb(var(--surface-default));
+    border-color: rgb(var(--border-default));
+  }
+  .input::placeholder {
+    color: rgba(var(--text-muted), 0.6);
+  }
+  .label {
+    @apply mb-1.5 block text-xs font-medium;
+    color: rgb(var(--text-muted));
+  }
+  .badge {
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium;
+    color: rgb(var(--text-default));
+  }
+}
+
+@layer utilities {
+  .bg-white {
+    background-color: rgb(var(--surface-default)) !important;
+  }
+  .bg-slate-100,
+  .bg-slate-200,
+  .bg-slate-50,
+  .bg-slate-50\/50,
+  .bg-slate-100\/40,
+  .bg-slate-100\/60 {
+    background-color: rgb(var(--surface-raised)) !important;
+  }
+  .text-slate-900,
+  .text-slate-800,
+  .text-slate-700 {
+    color: rgb(var(--text-default)) !important;
+  }
+  .text-slate-600,
+  .text-slate-500,
+  .text-slate-400,
+  .text-slate-300,
+  .text-slate-200,
+  .text-slate-100 {
+    color: rgb(var(--text-muted)) !important;
+  }
+  .border-border {
+    border-color: rgb(var(--border-default)) !important;
+  }
+  .bg-brand-100 {
+    background-color: rgb(var(--brand-100)) !important;
+  }
+}
