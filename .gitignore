@@ -1,6 +1,7 @@
 # ================================
 # Node.js dependencies
 # ================================
+
 node_modules/
 backend/node_modules/
 frontend/node_modules/
@@ -8,6 +9,7 @@ frontend/node_modules/
 # ================================
 # Build output
 # ================================
+
 backend/dist/
 frontend/dist/
 dist/
@@ -17,14 +19,9 @@ build/
 *.tsbuildinfo
 
 # ================================
-# Uploaded files
-# ================================
-backend/uploads/*
-!backend/uploads/.gitkeep
-
-# ================================
 # Environment files / secrets
 # ================================
+
 .env
 .env.local
 .env.*.local
@@ -37,8 +34,16 @@ frontend/.env.local
 frontend/.env.*.local
 
 # ================================
+# Uploaded files
+# ================================
+
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# ================================
 # Logs
 # ================================
+
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -48,6 +53,7 @@ pnpm-debug.log*
 # ================================
 # Temporary / legacy code
 # ================================
+
 backend/.tmp-test/
 backend/_legacy_js/
 _legacy_frontend/
@@ -55,6 +61,7 @@ _legacy_frontend/
 # ================================
 # OS / Editor
 # ================================
+
 .DS_Store
 Thumbs.db
 .vscode/
