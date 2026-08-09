@@ -1,8 +1,12 @@
-const defaultApiBaseUrl = 'https://your-render-backend.onrender.com/api';
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || defaultApiBaseUrl;
+const defaultApiBaseUrl = 'https://work-pilot-api.onrender.com';
+
+const apiBaseUrl =
+  import.meta.env.VITE_API_BASE_URL || defaultApiBaseUrl;
 
 export const config = {
   apiBaseUrl,
-  // Socket.IO connects to the server root, not the /api prefix.
-  socketUrl: import.meta.env.VITE_SOCKET_URL || apiBaseUrl.replace(/\/api\/?$/, ''),
+
+  socketUrl:
+    import.meta.env.VITE_SOCKET_URL ||
+    apiBaseUrl.replace(/\/api\/?$/, ''),
 };
