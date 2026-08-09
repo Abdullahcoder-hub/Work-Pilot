@@ -1,4 +1,4 @@
-import { Schema, model, Document, Types, SchemaDefinitionProperty } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 
 export const LEAVE_TYPES = ['annual', 'sick', 'casual', 'unpaid', 'other'] as const;
 export type LeaveType = (typeof LEAVE_TYPES)[number];
@@ -23,7 +23,7 @@ export interface ILeaveRequest extends Document {
   updatedAt: Date;
 }
 
-const dateField: SchemaDefinitionProperty<string> = {
+const dateField = {
   type: String,
   required: true,
   match: [/^\d{4}-\d{2}-\d{2}$/, 'must be in YYYY-MM-DD format'],

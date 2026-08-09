@@ -32,32 +32,12 @@ export function createApp(): Application {
   app.set('trust proxy', 1);
 
   app.use(helmet());
-  const corsOptions = {
-    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-      if (!origin) {
-        return callback(null, true);
-      }
-
-      const normalizedOrigin = origin.trim();
-      if (env.clientOrigin.includes(normalizedOrigin)) {
-        return callback(null, true);
-      }
-
-      const vercelOriginRegex = /^https:\/\/[\w-]+\.vercel\.app$/;
-      if (vercelOriginRegex.test(normalizedOrigin)) {
-        return callback(null, true);
-      }
-
-      return callback(new Error(`Origin ${normalizedOrigin} not allowed by CORS`));
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
-    optionsSuccessStatus: 204,
-  };
-
-  app.use(cors(corsOptions));
-  app.options('*', cors(corsOptions));
+  app.use(
+    cors({
+      origin: env.clientOrigin,
+      credentials: true,
+    })
+  );
   app.use(compression());
   app.use(express.json({ limit: '1mb' }));
   app.use(express.urlencoded({ extended: true, limit: '1mb' }));
@@ -68,22 +48,8 @@ export function createApp(): Application {
   }
 
   app.get('/health', (_req, res) => {
-  res.status(200).json({
-    success: true,
-    service: 'workpilot-backend',
-    version: '2.0.0',
-    env: env.nodeEnv
+    res.status(200).json({ success: true, service: 'workpilot-backend', version: '2.0.0', env: env.nodeEnv });
   });
-});
-
-app.get('/api/health', (_req, res) => {
-  res.status(200).json({
-    success: true,
-    service: 'workpilot-backend',
-    version: '2.0.0',
-    env: env.nodeEnv
-  });
-});
 
   app.use('/api/auth', authRoutes);
   app.use('/api/tasks', taskRoutes);

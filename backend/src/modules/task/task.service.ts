@@ -417,7 +417,7 @@ export async function moveTask(actor: Actor, taskId: string, input: MoveTaskInpu
   const wasCompleted = task.completed;
   const prevAssigneeId = task.assigneeId ? task.assigneeId.toString() : null;
 
-  const columnTasks = (await Task.find({ projectId, status: toStatus, _id: { $ne: task._id } }).sort({ order: 1 })) as ITask[];
+  const columnTasks = await Task.find({ projectId, status: toStatus, _id: { $ne: task._id } }).sort({ order: 1 });
 
   const clampedIndex = Math.max(0, Math.min(input.index, columnTasks.length));
   columnTasks.splice(clampedIndex, 0, task);

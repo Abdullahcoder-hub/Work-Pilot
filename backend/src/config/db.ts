@@ -21,10 +21,7 @@ export async function connectDB(): Promise<void> {
     logger.warn('MongoDB disconnected');
   });
 
-  await mongoose.connect(env.mongoUri, {
-    serverSelectionTimeoutMS: 5000,
-    connectTimeoutMS: 5000,
-  });
+  await mongoose.connect(env.mongoUri);
 }
 
 export async function disconnectDB(): Promise<void> {

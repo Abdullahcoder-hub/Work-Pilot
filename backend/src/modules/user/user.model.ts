@@ -124,13 +124,12 @@ userSchema.methods.comparePassword = async function comparePassword(
 
 userSchema.set('toJSON', {
   transform: (_doc, ret) => {
-    const safeRet = { ...ret } as Record<string, unknown>;
-    delete safeRet.password;
-    delete safeRet.emailVerificationToken;
-    delete safeRet.emailVerificationExpires;
-    delete safeRet.passwordResetToken;
-    delete safeRet.passwordResetExpires;
-    return safeRet;
+    delete ret.password;
+    delete ret.emailVerificationToken;
+    delete ret.emailVerificationExpires;
+    delete ret.passwordResetToken;
+    delete ret.passwordResetExpires;
+    return ret;
   },
 });
 
