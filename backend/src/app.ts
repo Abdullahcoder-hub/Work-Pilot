@@ -68,8 +68,22 @@ export function createApp(): Application {
   }
 
   app.get('/health', (_req, res) => {
-    res.status(200).json({ success: true, service: 'workpilot-backend', version: '2.0.0', env: env.nodeEnv });
+  res.status(200).json({
+    success: true,
+    service: 'workpilot-backend',
+    version: '2.0.0',
+    env: env.nodeEnv
   });
+});
+
+app.get('/api/health', (_req, res) => {
+  res.status(200).json({
+    success: true,
+    service: 'workpilot-backend',
+    version: '2.0.0',
+    env: env.nodeEnv
+  });
+});
 
   app.use('/api/auth', authRoutes);
   app.use('/api/tasks', taskRoutes);
