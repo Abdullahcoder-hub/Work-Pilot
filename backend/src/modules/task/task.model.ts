@@ -1,4 +1,4 @@
-import { Schema, model, Document, Types } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 
 export const CATEGORIES = ['Study', 'Work', 'Personal', 'Shopping', 'Fitness'] as const;
 export const PRIORITIES = ['High', 'Medium', 'Low'] as const;
@@ -7,7 +7,7 @@ export type TaskCategory = (typeof CATEGORIES)[number];
 export type TaskPriority = (typeof PRIORITIES)[number];
 export type TaskStatus = (typeof TASK_STATUSES)[number];
 
-export interface ITask extends Document {
+export interface ITask {
   _id: Types.ObjectId;
   companyId: Types.ObjectId;
   projectId: Types.ObjectId | null;

@@ -1,4 +1,4 @@
-import { Schema, model, Document, Types } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 /**
@@ -11,7 +11,7 @@ import bcrypt from 'bcryptjs';
 export const ROLES = ['super_admin', 'company_admin', 'team_lead', 'employee'] as const;
 export type Role = (typeof ROLES)[number];
 
-export interface IUser extends Document {
+export interface IUser {
   _id: Types.ObjectId;
   name: string;
   email: string;
@@ -123,13 +123,14 @@ userSchema.methods.comparePassword = async function comparePassword(
 };
 
 userSchema.set('toJSON', {
-  transform: (_doc, ret) => {
-    delete ret.password;
-    delete ret.emailVerificationToken;
-    delete ret.emailVerificationExpires;
-    delete ret.passwordResetToken;
-    delete ret.passwordResetExpires;
-    return ret;
+  transform: (_doc: any, ret: any) => {
+    const obj = ret as any;
+    delete obj.password;
+    delete obj.emailVerificationToken;
+    delete obj.emailVerificationExpires;
+    delete obj.passwordResetToken;
+    delete obj.passwordResetExpires;
+    return obj;
   },
 });
 

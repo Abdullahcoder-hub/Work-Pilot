@@ -1,4 +1,5 @@
 import { LeaveRequest, ILeaveRequest, LeaveType, LeaveStatus, LEAVE_TYPES } from './leave.model';
+import { HydratedDocument } from 'mongoose';
 import { User, Role } from '../user/user.model';
 import { ApiError } from '../../utils/ApiError';
 import { notify } from '../notification/notification.service';
@@ -126,7 +127,7 @@ export async function createLeaveRequest(actor: Actor, input: CreateLeaveInput) 
   });
 }
 
-async function findVisibleLeave(actor: Actor, leaveId: string): Promise<ILeaveRequest> {
+async function findVisibleLeave(actor: Actor, leaveId: string): Promise<HydratedDocument<ILeaveRequest>> {
   const leave = await LeaveRequest.findOne({ _id: leaveId, companyId: actor.companyId });
   if (!leave) throw ApiError.notFound('Leave request not found');
 
@@ -134,7 +135,7 @@ async function findVisibleLeave(actor: Actor, leaveId: string): Promise<ILeaveRe
   if (!isOwner && !CAN_REVIEW_LEAVE.includes(actor.role)) {
     throw ApiError.forbidden('You do not have access to this leave request');
   }
-  return leave;
+  return leave as HydratedDocument<ILeaveRequest>;
 }
 
 interface ReviewLeaveInput {

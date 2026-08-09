@@ -1,4 +1,4 @@
-import { FilterQuery, Types } from 'mongoose';
+import { FilterQuery, Types, HydratedDocument } from 'mongoose';
 import { Task, ITask, TaskStatus } from './task.model';
 import { User, Role } from '../user/user.model';
 import { Project } from '../project/project.model';
@@ -36,7 +36,7 @@ async function assertProjectAccess(actor: Actor, projectId: string) {
   return project;
 }
 
-function syncCompletionWithStatus(task: ITask, status: TaskStatus) {
+function syncCompletionWithStatus(task: HydratedDocument<ITask>, status: TaskStatus) {
   task.status = status;
   task.completed = status === 'done';
   task.completedAt = task.completed ? new Date() : null;
@@ -46,7 +46,7 @@ function syncCompletionWithStatus(task: ITask, status: TaskStatus) {
   }
 }
 
-function syncStatusWithCompletion(task: ITask, completed: boolean) {
+function syncStatusWithCompletion(task: HydratedDocument<ITask>, completed: boolean) {
   task.completed = completed;
   task.completedAt = completed ? new Date() : null;
   if (completed) {
@@ -139,7 +139,7 @@ export async function listTasks(actor: Actor, filters: ListTasksInput) {
   };
 }
 
-async function findVisibleTask(actor: Actor, taskId: string): Promise<ITask> {
+async function findVisibleTask(actor: Actor, taskId: string): Promise<HydratedDocument<ITask>> {
   const task = await Task.findOne({ _id: taskId, companyId: actor.companyId });
   if (!task) throw ApiError.notFound('Task not found');
 
@@ -156,7 +156,7 @@ async function findVisibleTask(actor: Actor, taskId: string): Promise<ITask> {
   if (!isOwner && !isAssignee && !canSeeAll && !hasProjectAccess) {
     throw ApiError.forbidden('You do not have access to this task');
   }
-  return task;
+  return task as HydratedDocument<ITask>;
 }
 
 export async function getTaskById(actor: Actor, taskId: string) {
@@ -420,7 +420,7 @@ export async function moveTask(actor: Actor, taskId: string, input: MoveTaskInpu
   const columnTasks = await Task.find({ projectId, status: toStatus, _id: { $ne: task._id } }).sort({ order: 1 });
 
   const clampedIndex = Math.max(0, Math.min(input.index, columnTasks.length));
-  columnTasks.splice(clampedIndex, 0, task);
+  columnTasks.splice(clampedIndex, 0, task as (typeof columnTasks)[number]);
 
   const bulkOps = columnTasks
     .map((t, idx) => ({ id: t._id.toString(), order: idx }))
