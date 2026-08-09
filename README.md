@@ -211,44 +211,44 @@ Same note: `npm install` again for the new `socket.io-client` dependency.
 `VITE_SOCKET_URL` is optional — it defaults to your API URL with `/api`
 stripped, so you only need it if the socket server runs somewhere else.
 
-## Deployment (Vercel + Railway)
+## Deployment (Vercel + Render)
 
-**Backend on Railway:**
-1. New Railway project → deploy from this GitHub repo.
+**Backend on Render:**
+1. New Render service → deploy from this GitHub repo.
 2. Settings → **Root Directory** → `backend` (this repo has `backend/`
-   and `frontend/` as subfolders — Railway needs to know which one is
-   this service).
-3. `backend/railway.json` already tells Railway how to build/start it
+   and `frontend/` as subfolders — Render needs to know which one is
+   your backend service).
+3. `backend/render.yaml` already tells Render how to build/start it
    (`npm run build` then `npm run start`) and where the healthcheck
-   lives (`/health`) — nothing else to configure there.
-4. Variables tab → set everything from `backend/.env.example`
-   (`MONGO_URI`, `JWT_SECRET`, etc.) — Railway assigns `PORT`
+   lives (`/health`) — nothing else needs to be configured there.
+4. Environment tab → set everything from `backend/.env.example`
+   (`MONGO_URI`, `JWT_SECRET`, etc.) — Render assigns `PORT`
    automatically, the app already reads it.
-5. Once deployed, Railway gives you a domain under Settings → Networking
-   (or attach a custom one). You'll need it for the next two steps.
+5. Once deployed, Render gives you a domain under Settings or your service
+   dashboard. You'll need it for the next two steps.
 6. Come back and set `CLIENT_ORIGIN` and `APP_URL` (both still in
-   Variables) to your **Vercel** frontend URL once you have it from the
-   step below — `.env.example` has the full explanation of why both
-   matter (CORS, and email links).
+   environment variables) to your **Vercel** frontend URL once you have it
+   from the step below — `.env.example` has the full explanation of why
+   both matter (CORS, and email links).
 
 **Frontend on Vercel:**
 1. New Vercel project → import this repo, set **Root Directory** to
    `frontend`.
-2. `frontend/.env.production` is committed with your Railway backend URL
+2. `frontend/.env.production` is committed with your Render backend URL
    baked in — Vite picks it up automatically during Vercel's build.
    Update it (or override via Vercel's own Environment Variables UI,
-   which takes precedence) once you know your actual Railway domain.
+   which takes precedence) once you know your actual Render domain.
 3. `frontend/vercel.json` is already there for SPA routing — without it,
    refreshing on any route other than `/` (e.g. `/dashboard`) 404s,
    since Vercel's static hosting doesn't know to serve `index.html` for
    client-side routes.
 
 **Order that actually works, since each side needs the other's URL:**
-deploy the backend first (you'll get a Railway domain even before
+deploy the backend first (you'll get a Render domain even before
 `CLIENT_ORIGIN` is set correctly — CORS errors are expected until step 6
-above is done) → deploy the frontend with that Railway URL in
-`.env.production` → go back and set `CLIENT_ORIGIN`/`APP_URL` on Railway
-to the Vercel URL you just got → redeploy the backend once (Railway
+above is done) → deploy the frontend with that Render URL in
+`.env.production` → go back and set `CLIENT_ORIGIN`/`APP_URL` on Render
+to the Vercel URL you just got → redeploy the backend once (Render
 variable changes trigger this automatically).
 
 ## Where this stands

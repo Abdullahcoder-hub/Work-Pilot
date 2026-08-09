@@ -1,4 +1,4 @@
-const defaultApiBaseUrl = 'https://work-pilot-production.up.railway.app/api';
+const defaultApiBaseUrl = 'https://your-render-backend.onrender.com/api';
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || defaultApiBaseUrl;
 
 export const config = {
