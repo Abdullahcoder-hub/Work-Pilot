@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { LogOut, ChevronDown, Palette } from 'lucide-react';
+import { LogOut, ChevronDown, Palette, Menu } from 'lucide-react';
 import { useAuth } from '../../features/auth/AuthContext';
 import { NotificationBell } from '../../features/notifications/NotificationBell';
 
@@ -29,7 +29,11 @@ const ROLE_LABEL: Record<string, string> = {
   super_admin: 'Super Admin',
 };
 
-export function Topbar() {
+interface TopbarProps {
+  onMenuClick: () => void;
+}
+
+export function Topbar({ onMenuClick }: TopbarProps) {
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [themeMenuOpen, setThemeMenuOpen] = useState(false);
@@ -86,8 +90,17 @@ export function Topbar() {
   const selectedTheme = THEME_OPTIONS.find((option) => option.id === theme) ?? THEME_OPTIONS[0];
 
   return (
-    <header className="flex h-14 items-center justify-end gap-2 border-b border-border bg-white px-6">
-      <NotificationBell />
+    <header className="flex h-14 items-center justify-between gap-2 border-b border-border bg-white px-4 sm:px-6">
+      <button
+        onClick={onMenuClick}
+        aria-label="Open menu"
+        className="rounded-lg p-2 text-slate-500 hover:bg-surface-subtle hover:text-slate-800 lg:hidden"
+      >
+        <Menu size={20} />
+      </button>
+
+      <div className="flex flex-1 items-center justify-end gap-2">
+        <NotificationBell />
 
       <div className="relative" ref={themeMenuContainerRef}>
         <button
@@ -96,7 +109,7 @@ export function Topbar() {
           aria-label="Change theme"
         >
           <Palette size={16} />
-          <span>{selectedTheme.label} · {mode === 'dark' ? 'Dark' : 'Light'}</span>
+          <span className="hidden sm:inline">{selectedTheme.label} · {mode === 'dark' ? 'Dark' : 'Light'}</span>
         </button>
 
         {themeMenuOpen && (
@@ -142,7 +155,7 @@ export function Topbar() {
           <div className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-700">
             {user?.name.charAt(0).toUpperCase()}
           </div>
-          <div className="text-left">
+          <div className="hidden text-left sm:block">
             <div className="text-sm font-medium leading-tight text-slate-800">{user?.name}</div>
             <div className="text-xs leading-tight text-slate-500">{user ? ROLE_LABEL[user.role] : ''}</div>
           </div>
@@ -159,6 +172,7 @@ export function Topbar() {
             </button>
           </div>
         )}
+      </div>
       </div>
     </header>
   );

@@ -17,6 +17,7 @@ import {
   Settings as SettingsIcon,
   ShieldCheck,
   Compass,
+  X,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { Role } from '../../types';
@@ -48,23 +49,46 @@ const NAV_ITEMS: NavItem[] = [
   { to: '/settings', label: 'Settings', icon: SettingsIcon },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  /** Whether the off-canvas drawer is open on mobile. Ignored at the `lg` breakpoint and up, where the sidebar is always visible. */
+  isOpen: boolean;
+  /** Called when the sidebar should close on mobile (backdrop click, nav link tap, or the close button). */
+  onClose: () => void;
+}
+
+export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { hasRole } = useAuth();
   const isSuperAdmin = hasRole('super_admin');
 
   return (
-    <aside className="flex h-screen w-60 shrink-0 flex-col border-r border-border bg-white">
-      <div className="flex items-center gap-2 px-4 py-4">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-white">
-          <Compass size={16} />
+    <aside
+      className={clsx(
+        'fixed inset-y-0 left-0 z-50 flex h-screen w-64 shrink-0 flex-col border-r border-border bg-white shadow-popover transition-transform duration-200 ease-in-out',
+        'lg:static lg:z-auto lg:w-60 lg:shadow-none lg:transition-none',
+        isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      )}
+    >
+      <div className="flex items-center justify-between gap-2 px-4 py-4">
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-white">
+            <Compass size={16} />
+          </div>
+          <span className="text-sm font-semibold text-slate-900">WorkPilot</span>
         </div>
-        <span className="text-sm font-semibold text-slate-900">WorkPilot</span>
+        <button
+          onClick={onClose}
+          aria-label="Close menu"
+          className="rounded-lg p-1.5 text-slate-400 hover:bg-surface-subtle hover:text-slate-600 lg:hidden"
+        >
+          <X size={18} />
+        </button>
       </div>
 
       <nav className="flex-1 space-y-0.5 overflow-y-auto px-2 py-2">
         {isSuperAdmin ? (
           <NavLink
             to="/platform"
+            onClick={onClose}
             className={({ isActive }) =>
               clsx(
                 'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
@@ -80,6 +104,7 @@ export function Sidebar() {
             <NavLink
               key={item.to}
               to={item.to}
+              onClick={onClose}
               className={({ isActive }) =>
                 clsx(
                   'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
